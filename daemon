@@ -279,8 +279,6 @@ get '/:folder_1/:folder_2/:folder_3/objects.json' =>
 
 sub get_objects {
 
-    mkdir shift unless -e shift;
-
     my $directory = IO::Dir->new(shift);
 
     my @objects;
