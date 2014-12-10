@@ -5,8 +5,8 @@ use strict;
 use warnings;
 
 BEGIN {
-    mkdir '/tmp/.altair/object-folders'
-      unless -e '/tmp/.altair/object-folders';
+    mkdir '/tmp/.altair/object-index'
+      unless -e '/tmp/.altair/object-index';
 }
 
 use Mojolicious::Lite;
