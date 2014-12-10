@@ -1,2 +1,2 @@
-# altair-object-store
-RESTful Object Storage Service
+# altair-object-index
+RESTful JSON Object Storage Service
