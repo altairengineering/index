@@ -4,6 +4,11 @@ use 5.010_000;
 use strict;
 use warnings;
 
+BEGIN {
+    mkdir '/tmp/.altair/object-folders'
+      unless -e '/tmp/.altair/object-folders';
+}
+
 use Mojolicious::Lite;
 use Mojo::Util;
 use Mojo::JSON;
@@ -32,24 +37,29 @@ get '/:object' => [object => qr/\w+/] => sub {
 
 post '/:object' => [object => qr/\w+/] => sub {
 
-    my $self   = shift;
+    my $self = shift;
+
     my $object = $self->param('object');
-    
-    return;
+
+    return $self->render(
+        json => sub {
+            $object->move_to("$OBJECTS/" . $object->filename);
+        }
+    );
 };
 
-del '/:object' => [ object => qr/\w+/] => sub {
+del '/:object' => [object => qr/\w+/] => sub {
 
     my $self = shift;
 
     my $object = $self->param('object');
-    
+
     if (-e "$OBJECTS/$object") {
         unlink "$OBJECTS/$object";
     }
-    
+
     return;
-  };
+};
 
 get '/:folder_1/:object' => [
     folder_1 => qr/\w+/,
@@ -70,8 +80,15 @@ post '/:folder_1/:object' => [
   ] => sub {
 
     my $self = shift;
-    
-    return;
+
+    my $folder_1 = $self->param('folder_1');
+    my $object   = $self->param('object');
+
+    return $self->render(
+        json => sub {
+            $object->move_to("$OBJECTS/$folder_1/" . $object->filename);
+        }
+    );
   };
 
 del '/:folder_1/:object' => [
@@ -80,14 +97,14 @@ del '/:folder_1/:object' => [
   ] => sub {
 
     my $self = shift;
-    
+
     my $folder_1 = $self->param('folder_1');
-    my $object = $self->param('object');
-    
+    my $object   = $self->param('object');
+
     if (-e "$OBJECTS/$folder_1/$object") {
         unlink "$OBJECTS/$folder_1/$object";
     }
-    
+
     return;
   };
 
@@ -114,8 +131,17 @@ post '/:folder_1/:folder_2/:object' => [
   ] => sub {
 
     my $self = shift;
-    
-    return;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    my $object   = $self->param('object');
+
+    return $self->render(
+        json => sub {
+            $object->move_to(
+                "$OBJECTS/$folder_1/$folder_2/" . $object->filename);
+        }
+    );
   };
 
 del '/:folder_1/:folder_2/:object' => [
@@ -125,15 +151,15 @@ del '/:folder_1/:folder_2/:object' => [
   ] => sub {
 
     my $self = shift;
-    
+
     my $folder_1 = $self->param('folder_1');
     my $folder_2 = $self->param('folder_2');
-    my $object = $self->param('object');
-    
+    my $object   = $self->param('object');
+
     if (-e "$OBJECTS/$folder_1/$folder_2/$object") {
         unlink "$OBJECTS/$folder_1/$folder_2/$object";
     }
-    
+
     return;
   };
 
@@ -163,8 +189,18 @@ post '/:folder_1/:folder_2/:folder_3/:object' => [
   ] => sub {
 
     my $self = shift;
-    
-    return;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    my $folder_3 = $self->param('folder_3');
+    my $object   = $self->param('object');
+
+    return $self->render(
+        json => sub {
+            $object->move_to("$OBJECTS/$folder_1/$folder_2/$folder_3/"
+                  . $object->filename);
+        }
+    );
   };
 
 del '/:folder_1/:folder_2/:folder_3/:object' => [
@@ -175,17 +211,17 @@ del '/:folder_1/:folder_2/:folder_3/:object' => [
   ] => sub {
 
     my $self = shift;
-    
+
     my $folder_1 = $self->param('folder_1');
     my $folder_2 = $self->param('folder_2');
     my $folder_3 = $self->param('folder_3');
-    my $object = $self->param('object');
-    
+    my $object   = $self->param('object');
+
     if (-e "$OBJECTS/$folder_1/$folder_2/$folder_3/$object") {
         unlink "$OBJECTS/$folder_1/$folder_2/$folder_3/$object";
     }
-    
-    return
+
+    return;
   };
 
 sub get_object {
