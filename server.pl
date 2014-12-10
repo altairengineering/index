@@ -6,7 +6,8 @@ use warnings;
 
 BEGIN {
 
-    mkdir '/tmp/.altair/docstore/' unless -e '/tmp/.altair/docstore/';
+    mkdir '/tmp/.altair/object-storage/'
+      unless -e '/tmp/.altair/object-storage/';
 }
 
 use Mojolicious::Lite;
@@ -20,101 +21,173 @@ use IO::File;
 
 plugin 'JSONConfig' => {file => 'server.config'};
 
-my $LOG = Mojo::Log->new;
-my $DOCUMENTS = app->config->{documents};
+my $OBJECTS = app->config->{storage};
+my $LOG     = Mojo::Log->new;
 
 
-any '/' => sub {
+### O B J E C T
+
+get '/:object' => [object => qr/\w+/] => sub {
 
     my $self = shift;
-    $self->redirect_to('index.html');
+
+    my $object = $self->param('object');
+
+    return $self->render(json => get_object("$OBJECTS/$object"));
 };
 
-get '/documents/results.json' => sub {
+post '/:object' => [object => qr/\w+/] => sub {
 
-    my $self = shift;
-
-    my $json = Mojo::JSON->new;
-    return $self->render(
-        text => $json->encode({data => get_results($DOCUMENTS)}));
+    my $self   = shift;
+    my $object = $self->param('object');
 };
 
-get '/documents/:category/results.json' => [category => qr/\w+/] => sub {
-
-    my $self = shift;
-
-    my $category = $self->param('category');
-
-    my $json = Mojo::JSON->new;
-    return $self->render(
-        text => $json->encode({data => get_results("$DOCUMENTS/$category/")}));
-};
-
-get '/documents/:category/results.json' => [category => qr/\w+/] => sub {
-
-    my $self = shift;
-
-    my $category = $self->param('category');
-
-    my $json = Mojo::JSON->new;
-    return $self->render(
-        text => $json->encode({data => get_results("$DOCUMENTS/$category/")}));
-};
-
-get '/documents/:category/:group/results.json' =>
-  [category => qr/\w+/, group => qr/\w+/] => sub {
-
-    my $self = shift;
-
-    my $category = $self->param('category');
-    my $group    = $self->param('group');
-
-    my $json = Mojo::JSON->new;
-    return $self->render(text =>
-          $json->encode({data => get_results("$DOCUMENTS/$category/$group/")})
-    );
-  };
-
-get '/documents/:category/:group/:document' => [
-    category      => qr/\w+/,
-    group         => qr/\w+/,
-    document      => qr/\w+/
+get '/:folder_1/:object' => [
+    folder_1 => qr/\w+/,
+    object   => qr/\w+/
   ] => sub {
 
     my $self = shift;
 
-    my $category   = $self->param('category');
-    my $group      = $self->param('group');
-    my $document   = $self->param('document');
+    my $folder_1 = $self->param('folder_1');
+    my $object   = $self->param('object');
 
-    my $outData = File::Slurp::read_file(
-        "$DOCUMENTS/$category/$group/$document");
-
-    $outData = Mojo::JSON::decode_json($outData);
-
-    return $self->render(json => $outData);
-
+    return $self->render(json => get_object("$OBJECTS/$folder_1/$object"));
   };
 
-sub get_results {
+post '/:folder_1/:object' => [
+    folder_1 => qr/\w+/,
+    object   => qr/\w+/
+  ] => sub {
+
+    my $self = shift;
+  };
+
+get '/:folder_1/:folder_2/:object' => [
+    folder_1 => qr/\w+/,
+    folder_2 => qr/\w+/,
+    object   => qr/\w+/
+  ] => sub {
+
+    my $self = shift;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    my $object   = $self->param('object');
+
+    return $self->render(
+        json => get_object("$OBJECTS/$folder_1/$folder_2/$object"));
+  };
+
+post '/:folder_1/:folder_2/:object' => [
+    folder_1 => qr/\w+/,
+    folder_2 => qr/\w+/,
+    object   => qr/\w+/
+  ] => sub {
+
+    my $self = shift;
+  };
+
+get '/:folder_1/:folder_2/:folder_3/:object' => [
+    folder_1 => qr/\w+/,
+    folder_2 => qr/\w+/,
+    folder_3 => qr/\w+/,
+    object   => qr/\w+/
+  ] => sub {
+
+    my $self = shift;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    my $folder_3 = $self->param('folder_3');
+    my $object   = $self->param('object');
+
+    return $self->render(
+        json => get_object("$OBJECTS/$folder_1/$folder_2/$folder_3/$object"));
+  };
+
+post '/:folder_1/:folder_2/:folder_3/:object' => [
+    folder_1 => qr/\w+/,
+    folder_2 => qr/\w+/,
+    folder_3 => qr/\w+/,
+    object   => qr/\w+/
+  ] => sub {
+
+    my $self = shift;
+  };
+
+sub get_object {
+
+    my $object = shift;
+
+    if (-e $object) {
+
+        $object = Mojo::JSON::decode_json(File::Slurp::read_file($object));
+    }
+
+    return $object;
+}
+
+
+### O B J E C T S
+
+get '/objects.json' => sub {
+
+    my $self = shift;
+    return $self->render(json => get_objects($OBJECTS));
+};
+
+get '/:folder_1/objects.json' => [folder_1 => qr/\w+/] => sub {
+
+    my $self = shift;
+
+    my $folder_1 = $self->param('folder_1');
+    return $self->render(json => get_objects("$OBJECTS/$folder_1/"));
+};
+
+get '/:folder_1/:folder_2/objects.json' =>
+  [folder_1 => qr/\w+/, folder_2 => qr/\w+/] => sub {
+
+    my $self = shift;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    return $self->render(
+        json => get_objects("$OBJECTS/$folder_1/$folder_2/"));
+  };
+
+get '/:folder_1/:folder_2/:folder_3/objects.json' =>
+  [folder_1 => qr/\w+/, folder_2 => qr/\w+/, folder_3 => qr/\w+/] => sub {
+
+    my $self = shift;
+
+    my $folder_1 = $self->param('folder_1');
+    my $folder_2 = $self->param('folder_2');
+    my $folder_3 = $self->param('folder_3');
+
+    return $self->render(
+        json => get_objects("$OBJECTS/$folder_1/$folder_2/$folder_3/"));
+  };
+
+sub get_objects {
+
+    mkdir shift unless -e shift;
 
     my $directory = IO::Dir->new(shift);
 
-    my @results;
+    my @objects;
 
     if (defined $directory) {
 
         while (defined($_ = $directory->read)) {
 
-            next if $_ eq 'README.md';
-            next if $_ =~ m/^\./g;
-            push @results, {name => $_};
+            push @objects, {name => $_};
         }
 
         undef $directory;
     }
 
-    return \@results;
+    return \@objects;
 }
 
 app->start();
