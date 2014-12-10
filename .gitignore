@@ -1,5 +1,6 @@
 documents
 objects
 public
+archive
 *.bak
 *.swp
