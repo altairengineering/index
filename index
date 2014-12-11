@@ -8,8 +8,8 @@ BEGIN {
 
     $ENV{MOJO_MAX_MESSAGE_SIZE} = 1073741824;
 
-    mkdir '/tmp/.altair/object-index'
-      unless -e '/tmp/.altair/object-index';
+    mkdir '/tmp/.altair/index'
+      unless -e '/tmp/.altair/index';
 }
 
 use Mojolicious::Lite;
@@ -23,7 +23,7 @@ use IO::File;
 
 plugin 'JSONConfig' => {file => 'index.config'};
 
-my $OBJECTS = app->config->{storage};
+my $OBJECTS = app->config->{objects};
 
 my $LOG = Mojo::Log->new;
 
