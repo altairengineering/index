@@ -1,2 +1,2 @@
 # index
-Object Storage Daemon
+Object Storage Services
