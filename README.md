@@ -1,2 +1,2 @@
 # index
-Scalable Object Storage Environment 
+Distributed Object Storage
