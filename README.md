@@ -1,2 +1,2 @@
-# altair-object-index
-RESTful JSON Object Indexing Service
+# index
+RESTful JSON Object Storage Engine
