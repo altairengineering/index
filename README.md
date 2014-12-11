@@ -1,2 +1,2 @@
 # index
-Object Storage Services
+RESTful Object Storage Services
