@@ -1,2 +1,2 @@
 # index
-JSON Object Storage Engine
+Scalable Object Storage Environment 
