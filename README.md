@@ -1,2 +1,2 @@
 # index
-RESTful JSON Object Storage Engine
+JSON Object Storage Engine
