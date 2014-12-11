@@ -1,2 +1,2 @@
 # index
-Distributed Object Storage Daemon
+Object Storage Daemon
