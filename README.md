@@ -1,2 +1,2 @@
 # index
-Scalable Object Storage Engine
+Scalable Object Storage Daemon
