@@ -5,6 +5,9 @@ use strict;
 use warnings;
 
 BEGIN {
+
+    $ENV{MOJO_MAX_MESSAGE_SIZE} = 1073741824;
+
     mkdir '/tmp/.altair/object-index'
       unless -e '/tmp/.altair/object-index';
 }
@@ -18,7 +21,7 @@ use File::Copy;
 use IO::Dir;
 use IO::File;
 
-plugin 'JSONConfig' => {file => 'server.config'};
+plugin 'JSONConfig' => {file => 'index.config'};
 
 my $OBJECTS = app->config->{storage};
 
