@@ -21,7 +21,8 @@ use IO::File;
 plugin 'JSONConfig' => {file => 'server.config'};
 
 my $OBJECTS = app->config->{storage};
-my $LOG     = Mojo::Log->new;
+
+my $LOG = Mojo::Log->new;
 
 
 ### O B J E C T
