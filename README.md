@@ -1,6 +1,6 @@
 # index
 
-RESTful Object Storage Engine
+RESTful Object Storage Environment
 
 ## Supported Platforms
 

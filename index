@@ -24,6 +24,7 @@ use IO::File;
 plugin 'JSONConfig' => {file => 'index.config'};
 
 my $OBJECTS = app->config->{objects};
+mkdir $OBJECTS unless -e $OBJECTS;
 
 my $LOG = Mojo::Log->new;
 
