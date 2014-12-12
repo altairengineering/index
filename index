@@ -8,7 +8,12 @@ BEGIN {
 
     $ENV{MOJO_MAX_MESSAGE_SIZE} = 1073741824;
 
-    mkdir '/tmp/.altair/index'
+    use File::Path qw/make_path/;
+
+    make_path('/var/spool/altair/index')
+      unless -e '/var/spool/altair/index';
+
+    make_path('/tmp/.altair/index')
       unless -e '/tmp/.altair/index';
 }
 
@@ -18,13 +23,13 @@ use Mojo::JSON;
 use Mojo::Log;
 use File::Slurp;
 use File::Copy;
+use File::Path;
 use IO::Dir;
 use IO::File;
 
 plugin 'JSONConfig' => {file => 'index.config'};
 
-my $OBJECTS = app->config->{objects};
-mkdir $OBJECTS unless -e $OBJECTS;
+my $OBJECTS = '/var/spool/altair/inbox';
 
 my $LOG = Mojo::Log->new;
 
@@ -63,7 +68,7 @@ del '/:object' => [object => qr/\w+/] => sub {
         unlink "$OBJECTS/$object";
     }
 
-    return;
+    return $self->render(json => []);
 };
 
 get '/:folder_1/:object' => [
@@ -89,6 +94,9 @@ post '/:folder_1/:object' => [
     my $folder_1 = $self->param('folder_1');
     my $object   = $self->param('object');
 
+    make_path("$OBJECTS/$folder_1/")
+      unless -e "$OBJECTS/$folder_1/";
+
     return $self->render(
         json => sub {
             $object->move_to("$OBJECTS/$folder_1/" . $object->filename);
@@ -109,8 +117,11 @@ del '/:folder_1/:object' => [
     if (-e "$OBJECTS/$folder_1/$object") {
         unlink "$OBJECTS/$folder_1/$object";
     }
+    if (-d "$OBJECTS/$folder_1/$object") {
+        remove_tree("$OBJECTS/$folder_1/$object");
+    }
 
-    return;
+    return $self->render(json => []);
   };
 
 get '/:folder_1/:folder_2/:object' => [
@@ -141,6 +152,9 @@ post '/:folder_1/:folder_2/:object' => [
     my $folder_2 = $self->param('folder_2');
     my $object   = $self->param('object');
 
+    make_path("$OBJECTS/$folder_1/$folder_2/")
+      unless -e "$OBJECTS/$folder_1/$folder_2/";
+
     return $self->render(
         json => sub {
             $object->move_to(
@@ -164,8 +178,11 @@ del '/:folder_1/:folder_2/:object' => [
     if (-e "$OBJECTS/$folder_1/$folder_2/$object") {
         unlink "$OBJECTS/$folder_1/$folder_2/$object";
     }
+    if (-d "$OBJECTS/$folder_1/$folder_2/$object") {
+        remove_tree("$OBJECTS/$folder_1/$folder_2/$object");
+    }
 
-    return;
+    return $self->render(json => []);
   };
 
 get '/:folder_1/:folder_2/:folder_3/:object' => [
@@ -200,6 +217,9 @@ post '/:folder_1/:folder_2/:folder_3/:object' => [
     my $folder_3 = $self->param('folder_3');
     my $object   = $self->param('object');
 
+    make_path("$OBJECTS/$folder_1/$folder_2/$folder_3/")
+      unless -e "$OBJECTS/$folder_1/$folder_2/$folder_3/";
+
     return $self->render(
         json => sub {
             $object->move_to("$OBJECTS/$folder_1/$folder_2/$folder_3/"
@@ -225,8 +245,11 @@ del '/:folder_1/:folder_2/:folder_3/:object' => [
     if (-e "$OBJECTS/$folder_1/$folder_2/$folder_3/$object") {
         unlink "$OBJECTS/$folder_1/$folder_2/$folder_3/$object";
     }
+    if (-d "$OBJECTS/$folder_1/$folder_2/$folder_3/$object") {
+        remove_tree("$OBJECTS/$folder_1/$folder_2/$folder_3/$object");
+    }
 
-    return;
+    return $self->render(json => []);
   };
 
 sub get_object {
@@ -292,7 +315,7 @@ sub get_objects {
 
         while (defined($_ = $directory->read)) {
 
-            push @objects, {name => $_};
+            push @objects, {object => $_};
         }
 
         undef $directory;
