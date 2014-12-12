@@ -1,6 +1,6 @@
 # index
 
-RESTful Object Storage Environment
+Cross-platform object-storage service.
 
 ## Supported Platforms
 
