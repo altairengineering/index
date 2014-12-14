@@ -1,6 +1,6 @@
 # index
 
-RESTful object-storage service.
+Distributed object-storage glue.
 
 ## Supported Platforms
 
