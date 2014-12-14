@@ -1,6 +1,6 @@
 # index
 
-RESTful object-storage engine.
+A RESTful object-storage engine.
 
 ## Supported Platforms
 
