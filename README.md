@@ -1,6 +1,6 @@
 # index
 
-A RESTful object-storage engine.
+Distributed object-storage glue.
 
 ## Supported Platforms
 
