@@ -1,6 +1,6 @@
 # index
 
-Distributed object-storage glue.
+Distributed object-storage fabric.
 
 ## Supported Platforms
 

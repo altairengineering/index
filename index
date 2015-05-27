@@ -10,8 +10,8 @@ BEGIN {
 
     use File::Path qw/make_path/;
 
-    make_path('/var/spool/altair/index')
-      unless -e '/var/spool/altair/index';
+    #make_path('/var/spool/altair/index')
+    #  unless -e '/var/spool/altair/index';
 
     make_path('/tmp/.altair/index')
       unless -e '/tmp/.altair/index';
@@ -29,7 +29,8 @@ use IO::File;
 
 plugin 'JSONConfig' => {file => 'index.config'};
 
-my $OBJECTS = '/var/spool/altair/inbox';
+#my $OBJECTS = '/var/spool/altair/inbox';
+my $OBJECTS = '/tmp/.altair/index';
 
 my $LOG = Mojo::Log->new;
 
@@ -51,6 +52,8 @@ post '/:object' => [object => qr/\w+/] => sub {
 
     my $object = $self->param('object');
 
+    print $object->filename;
+    
     return $self->render(
         json => sub {
             $object->move_to("$OBJECTS/" . $object->filename);
@@ -315,7 +318,7 @@ sub get_objects {
 
         while (defined($_ = $directory->read)) {
 
-            push @objects, {object => $_};
+            push @objects, {name => $_};
         }
 
         undef $directory;
