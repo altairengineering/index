@@ -10,11 +10,8 @@ BEGIN {
 
     use File::Path qw/make_path/;
 
-    #make_path('/var/spool/altair/index')
-    #  unless -e '/var/spool/altair/index';
-
-    make_path('/tmp/.altair/index')
-      unless -e '/tmp/.altair/index';
+    make_path('/tmp/.index')
+      unless -e '/tmp/.index';
 }
 
 use Mojolicious::Lite;
