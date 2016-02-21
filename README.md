@@ -8,17 +8,17 @@ Linux, Unix, OSX
 
 ## Download
 
-You can download daily updates of index using multiple methods.
+You can download the latest repository snapshot.
 
-### Web / FTP Client
+### Web Browser
 
-    ftp://ftp.altair.com/pub/outgoing/r3/index
+    https://github.com/ispyhumanfly/index/archive/master.tar.gz
 
 ### Command Line
 
-    wget ftp://ftp.altair.com/pub/outgoing/r3/index/index-`date +%F`.tar.gz
+    wget https://github.com/ispyhumanfly/index/archive/master.tar.gz
 
 ## Copyright
 
-(c) Copyright 2014 - 2015 Altair Engineering, Inc. All rights reserved.
+(c) Copyright 2014 - 2016  Thouhtpivot, LLC
 
