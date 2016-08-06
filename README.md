@@ -1,22 +1,9 @@
 # index
-
-Distributed object-storage fabric.
+Maneuver cloud objects between Amazon, Microsoft and Google cloud storage services.
 
 ## Supported Platforms
 
 Linux, Unix, OSX
-
-## Download
-
-You can download the latest repository snapshot.
-
-### Web Browser
-
-    https://github.com/ispyhumanfly/index/archive/master.tar.gz
-
-### Command Line
-
-    wget https://github.com/ispyhumanfly/index/archive/master.tar.gz
 
 ## Copyright
 
